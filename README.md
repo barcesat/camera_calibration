@@ -33,7 +33,7 @@ $ cd camera_calibration
 Build the packages using catkin_make. 
 
 ```bash
-$ catkin-make
+$ catkin_make
 ```
 You packages should be built, and you there should be three subdirectories: build, src, and devel. The devel folder contains
 the built executible files, and a bash script that needs to be run. This bash script tells ROS where this package is. To
@@ -59,14 +59,14 @@ ROS Launch Files are used to run multiple executible files, pass in arguments to
 one simple command. To learn more, go [here](http://wiki.ros.org/roslaunch/XML).This repository contains four launch files located in /camera_calibration/src/my_camera_calibration/launch.
 The four launch files are *webcam.launch camera.launch, camera_calibration.launch,* and *verify_calibration.launch*. 
 
-#### If not useing a webcam
+#### If not using a webcam
 
 If you are not using a webcam, then you will need to modify the *camera.launch* file to run your specific camera. The example 
 in this repository is for a point gray camera. To find one for your camera, go to the ROS package directory of your specific 
 camera. An easy way to do this is by using the ROS command **roscd**.
 
 ```bash
-$ echo roscd <package_name>
+$ roscd <package_name>
 ```
 example
 ```bash
