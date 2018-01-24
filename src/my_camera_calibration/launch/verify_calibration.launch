@@ -7,7 +7,7 @@
 
 	
 	<arg name="use_webcam" default = "true"/>      <!-- Use the webcam on your computer instead of a different camera. -->
-	<arg name="topic_name" default="original_image"/>   <!-- The topic for the video. DO NOT CHANGE UNLESS YOU ARE FAMILIAR WITH NAMESPACES-->
+	<arg name="topic_name" default="image_raw"/>   <!-- The topic for the video. DO NOT CHANGE UNLESS YOU ARE FAMILIAR WITH NAMESPACES-->
 	<arg name="frame_rate" default="30.0"/>        <!-- Frame rate of camera, not webcam -->
 	<arg name="calibrated" default="true"/>        <!-- Does the camera calibration file exist -->
 
@@ -16,18 +16,10 @@
 	<group if="$(arg use_webcam)">
 
 		<!-- This node will publish usb_camera info and the image -->
-		<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
-		    <param name="video_device" value="/dev/video0" />
-		    <param name="image_width" value="640" />
-		    <param name="image_height" value="480" />
-		    <param name="pixel_format" value="yuyv" />          <!-- possible values are mjpeg, yuyv, uyvy -->
-		    <param name="camera_frame_id" value="usb_cam" />
-		    <param name="io_method" value="mmap"/>              <!-- possible valuse are mmap, read, userptr -->
-		    <param name="camera_name" value="narrow_stereo"/>  <!-- Must be the same as the camera name in the 																					webcam_intrinsic_parameters.yaml -->
-		    <param name="camera_info_url" if="$(arg calibrated)" value="file://$(find my_camera_calibration)/param/webcam_intrinsic_parameters.yaml"/>
-		    <remap from="usb_cam/image_raw" to="$(arg topic_name)"/>
-  		</node>
-
+		<include file="$(find my_camera_calibration)/launch/webcam.launch">
+			<arg name="calibrated" value = "$(arg calibrated)"/> 
+			<arg name="topic_name" value="$(arg topic_name)"/>
+		</include>
 
 	</group>
 

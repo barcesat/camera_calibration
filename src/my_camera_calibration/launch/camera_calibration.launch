@@ -41,15 +41,10 @@
 		<group if="$(arg use_webcam)">
 
 					<!-- This node will publish usb_camera info and the image -->
-			<node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
-			    <param name="video_device" value="/dev/video0" />
-			    <param name="image_width" value="640" />
-			    <param name="image_height" value="480" />
-			    <param name="pixel_format" value="yuyv" />
-			    <param name="camera_frame_id" value="usb_cam" />
-			    <param name="io_method" value="mmap"/>
-			    <remap from="usb_cam/image_raw" to="$(arg topic_name)"/>
-	  		</node>
+			<include file="$(find my_camera_calibration)/launch/webcam.launch">
+				<arg name="calibrated" value = "false"/> 
+				<arg name="topic_name" value="$(arg topic_name)"/>
+			</include>
 		</group>
 
 		<!-- Use another camera instead of the webcam -->
