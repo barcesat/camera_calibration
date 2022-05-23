@@ -8,8 +8,8 @@ project(my_camera_calibration)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    roscpp
-   sensor_msgs
+  roscpp
+  sensor_msgs
   cv_bridge
   roscpp
   std_msgs
