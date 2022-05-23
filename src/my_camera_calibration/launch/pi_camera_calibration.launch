@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<!-- If true, use the rospackage camera_calibration instead of camera_calibration.cpp -->
+	<arg name="use_ros"  default="true"/>
+
+	<!-- Arguments if using rospackage camera_calibration -->
+	<arg name="use_webcam" default = "false"/>   <!-- Use the webcam on your computer instead of a different camera. -->
+	<arg name="topic_name" default="/csi_cam_0/image_raw"/>   <!-- The topic for the video. DO NOT CHANGE UNLESS YOU ARE FAMILIAR WITH NAMESPACES-->
+	<arg name="frame_rate" default="30.0"/>     <!-- Frame rate of camera, not webcam -->
+
+
+	<!-- Arguments if using camera_calibration.cpp -->
+	<arg name="config_file" default="$(find my_camera_calibration)/param/default.xml"/> <!-- location of parameters needed for camera_calibration.cpp -->
+
+
+
+	<!-- Using rospackage camera_calibration -->
+	<group if="$(arg use_ros)">
+
+
+		<!-- camera calibration node. This node will call subscibe to the topic "topic name" to get images
+			thses images are used in the calibration method -->
+		<!-- 
+			size  : mxn inner corners of the checkerboard
+			sqaure: the size of the square in meters
+			k     : number of radial distortion coefficients to use
+			image : topic name it will subscribe to to get the image -->
+		<node pkg="camera_calibration" type="cameracalibrator.py" name="camera_calibrator" output="screen"
+			args="
+			--size 9x6                   
+			--square 0.0235 
+			--k-coefficients=3 
+			--no-service-check 
+			image:=/$(arg topic_name) 
+			camera:/my_camera"/>
+
+
+		<!-- Use webcam instead of another camera -->
+		<group if="$(arg use_webcam)">
+
+					<!-- This node will publish usb_camera info and the image -->
+			<include file="$(find my_camera_calibration)/launch/webcam.launch">
+				<arg name="calibrated" value = "false"/> 
+				<arg name="topic_name" value="$(arg topic_name)"/>
+			</include>
+		</group>
+
+		<!-- Use another camera instead of the webcam -->
+		<group unless="$(arg use_webcam)">
+			<include file="$(find my_camera_calibration)/launch/camera.launch">
+				<arg name="camera_serial" value = "0"/>
+				<arg name="calibrated" value = "false"/>              <!-- The camera is not already calibrated. This should be false -->
+				<arg name="frame_rate" value="$(arg frame_rate)"/>
+				<arg name="camera_name" value="$(arg topic_name)"/>
+			</include>
+		</group>
+
+
+	</group>
+
+
+
+	<!-- Using camera_calibration.cpp -->
+	<group unless="$(arg use_ros)">
+		<node pkg="my_camera_calibration" type="camera_calibration" name="camera_calibration" args="$(arg config_file)" output="screen" cwd="node" />
+	</group>
+
+
+
+
+</launch>
+
+

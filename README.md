@@ -98,6 +98,24 @@ to meet your webcam's specifications. Look for the section
 
 Edit the values (ignore camera_name and camera_info_url for now) to reflect your webcam's specifications. That's it. 
 
+#### If using a remote camera
+
+Run the camera node on the remote computer (Use it as the ROS MASTER)
+jetson@jetson-jetson:~/pi_camera_ws$ export ROS_MASTER_URI=http://10.100.102.83:11311
+jetson@jetson-jetson:~/pi_camera_ws$ export ROS_IP=10.100.102.83
+jetson@jetson-jetson:~/pi_camera_ws$ export ROS_HOSTNAME=10.100.102.83
+
+And also config on your PC:
+export ROS_MASTER_URI=http://10.100.102.83:11311
+
+test to see that you're getting the camera feed:
+rosrun rqt_image_view rqt_image_view
+
+run the modified launch file:
+roslaunch my_camera_calibration pi_camera_calibration.launch
+
+
+
 ### Calibrate Camera
 
 To calibrate the camera, use the *camera_calibration.launch* file. There are some arguments that you will need to change. 
